@@ -11,3 +11,7 @@ Example usage:
 ```bash
 python import_timesheet.py -s temp/Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
 ```
+
+## License
+
+This project is licensed under the terms of the MIT license.
