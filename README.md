@@ -9,5 +9,5 @@ use ```live_mode``` flag when you are ready. Defaults to test mode.
 Example usage:
 
 ```bash
-python import_timesheet.py -s data\Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
+python import_timesheet.py -s temp/Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
 ```

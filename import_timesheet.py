@@ -5,7 +5,7 @@ Usage - help:
     $ python import_timesheet.py -h
     
 Usage:
-    $ python import_timesheet.py -s source)file.csv
+    $ python import_timesheet.py -s temp/Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
 """
 
 import argparse
