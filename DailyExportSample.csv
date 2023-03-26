@@ -1,0 +1,21 @@
+#Daily Time Tracking (dailytimetracking.com)
+#Exported data from 20 March 2023 to 26 March 2023
+#Exported on 26 March 2023
+#Duration formatted as Total minutes (e.g. 26.33)
+#Times rounded to nearest minute
+#Activity,Date 1,Date 2,Date n...
+,20/3/2023,21/3/2023,22/3/2023,23/3/2023,24/3/2023,25/3/2023,26/3/2023
+TEST-377 Run tests,283,182,123,472,244,0,0
+JOB-113 Client B support,0,0,75,0,0,0,0
+JOB-27 IoT device placement on site,0,0,69,0,0,0,0
+JOB27 Ethics and privacy,200,0,0,0,0,0,0
+JOB27 investors,0,0,0,22,0,0,0
+JOB27 release notes,0,149,0,0,0,0,0
+JOB89 Peter,0,59,0,0,162,0,0
+JOB89 Team standup,0,40,0,0,0,0,0
+JOB89 Mary,0,63,94,0,0,0,0
+Planning,0,0,0,0,101,0,0
+SALES meetings,0,0,0,0,0,0,139
+Systems Admin,0,0,24,0,0,0,0
+PROJM-347 project report,0,0,0,0,212,68,0
+PROJM77 Client A,84,108,0,0,0,0,0

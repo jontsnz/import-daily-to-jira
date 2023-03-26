@@ -13,6 +13,7 @@ import logging
 import csv
 import datetime
 from jira import JIRA
+import sys
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -140,7 +141,11 @@ def connect_to_jira(jira_url: str, jira_username: str, jira_api_token: str) -> J
     """
 
     # Connect to JIRA
-    jira = JIRA(jira_url, basic_auth=(jira_username, jira_api_token))
+    try:
+        jira = JIRA(jira_url, basic_auth=(jira_username, jira_api_token), validate=True)
+    except Exception as e:
+        logger.error(f"Unable to connect to JIRA: {e}")
+        sys.exit(1)
     return jira
 
 def import_work_logs(work_logs: list, jira_url: str, username: str, token: str, live_mode: bool) -> None:
@@ -196,7 +201,7 @@ def process(source_file: str, jira_url: str, username: str, token: str, live_mod
     consolidated_data = consolidate_data(data)
     # display_data(consolidated_data)
     work_logs = convert_data_to_work_logs(consolidated_data)
-    #display_work_logs(work_logs)
+    # display_work_logs(work_logs)
     
     if live_mode:
         proceed = input(f"LIVE mode selected. Proceed with importing {len(work_logs)} time entries? (Y/N) ")

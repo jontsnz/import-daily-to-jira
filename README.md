@@ -16,12 +16,12 @@ The following assumptions have been made:
 
 ## Usage
 
-Use the ```live_mode``` flag when you are ready. Defaults to test mode which shows what would have been imported, and any issues that could not be found.
+Use the ```--live_mode``` flag when you are ready. Defaults to test mode which shows what would have been imported, and any issues that could not be found.
 
 ### Example usage:
 
 ```bash
-python import_timesheet.py -s temp/Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
+python import_timesheet.py -s DailyExportSample.csv -j <jira_url> -u <jira_user> -t <jira_api_token>
 ```
 
 ## License
