@@ -153,13 +153,15 @@ def import_work_logs(work_logs: list, jira_url: str, username: str, token: str, 
     manual_entry_jobs = {}
     
     logger.info(f"Importing {len(work_logs)} work logs to JIRA...")
-    cnt = 0    
+    cnt = 0
+    total_minutes_worked = 0
     for work_log in work_logs:
         cnt += 1
         worklog_date = work_log['date_worked']
         started_date = datetime.datetime.strptime(worklog_date, '%Y-%m-%dT%H:%M:%S.000+0000')
         issue_key = work_log['job_number']
         minutes_worked = work_log['minutes_worked']
+        total_minutes_worked += minutes_worked
 
         try:
             issue = jira.issue(issue_key)
@@ -192,6 +194,9 @@ def import_work_logs(work_logs: list, jira_url: str, username: str, token: str, 
                 fmt_date = datetime.datetime.strptime(worklog_date, '%Y-%m-%dT%H:%M:%S.000+0000').strftime('%d/%m/%Y')
                 logger.info(f" - {fmt_date} {work_log['minutes_worked']} mins")
 
+    # Display total hours worked
+    total_hours_worked = total_minutes_worked / 60
+    logger.info(f"Total hours worked: {total_hours_worked:.2f} hours")
     return
         
 def process(source_file: str, jira_url: str, username: str, token: str, live_mode: bool):
