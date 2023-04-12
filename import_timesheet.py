@@ -5,7 +5,10 @@ Usage - help:
     $ python import_timesheet.py -h
     
 Usage:
-    $ python import_timesheet.py -s temp/Daily.csv -j <jira_url> -u <jira_user> -t <jira_api_token> --live_mode
+    $ python import_timesheet.py  -j <jira_url> -u <jira_user> -t <jira_api_token> -s temp/Daily.csv --live_mode
+
+Alternatively you can store your JIRA credentials in a config file and use that:
+    $ python import_timesheet.py -c config.yaml -s temp/Daily.csv --live_mode
 """
 
 import argparse
@@ -14,6 +17,8 @@ import csv
 import datetime
 from jira import JIRA
 import sys
+import os
+import yaml
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -199,9 +204,29 @@ def import_work_logs(work_logs: list, jira_url: str, username: str, token: str, 
     logger.info(f"Total hours worked: {total_hours_worked:.2f} hours")
     return
         
-def process(source_file: str, jira_url: str, username: str, token: str, live_mode: bool):
+def process(config_file: str, source_file: str, jira_url: str, username: str, token: str, live_mode: bool):
     """Process the source file and create the JIRA import file
     """
+    if config_file is not None:
+        if not os.path.exists(config_file):
+            logger.error(f"Config file {config_file} does not exist")
+            sys.exit(1)
+        with open(config_file, "r") as f:
+            config_data = yaml.safe_load(f)
+            url = config_data['jira']['url']
+            login = config_data['jira']['login']
+            api_token = config_data['jira']['api_token']
+            if (url is None) or (login is None) or (api_token is None):
+                logger.error("JIRA URL, username and API token must be specified in config file if config file is provided") 
+                sys.exit(1)
+    else:
+        if (jira_url is None) or (username is None) or (token is None):
+            logger.error("JIRA URL, username and API token must be specified if config file is not provided")
+            sys.exit(1)
+        url = jira_url
+        login = username
+        api_token = token
+        
     data = read_source_data_from_file(source_file)
     consolidated_data = consolidate_data(data)
     # display_data(consolidated_data)
@@ -214,7 +239,7 @@ def process(source_file: str, jira_url: str, username: str, token: str, live_mod
             logger.info("Exiting...")
             return        
 
-    import_work_logs(work_logs, jira_url, username, token, live_mode)
+    import_work_logs(work_logs, url, login, api_token, live_mode)
     logger.info("Done")
     return
 
@@ -223,10 +248,11 @@ def parse_opt():
     """ Parse command line options """
 
     ap = argparse.ArgumentParser()
+    ap.add_argument("-c", "--config_file", type=str, required=False, help="Config file containing JIRA details")
+    ap.add_argument("-j", "--jira_url", type=str, required=False, help="JIRA Url")
+    ap.add_argument("-u", "--username", type=str, required=False, help="JIRA username")
+    ap.add_argument("-t", "--token", type=str, required=False, help="JIRA API token")
     ap.add_argument("-s", "--source_file", type=str, required=True, help="Source CSV file")
-    ap.add_argument("-j", "--jira_url", type=str, required=True, help="JIRA Url")
-    ap.add_argument("-u", "--username", type=str, required=True, help="JIRA username")
-    ap.add_argument("-t", "--token", type=str, required=True, help="JIRA API token")
     ap.add_argument("--live_mode", type=bool, action=argparse.BooleanOptionalAction, help="Update data?")
     return ap.parse_args()
 
