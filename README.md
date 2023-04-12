@@ -14,6 +14,10 @@ The following assumptions have been made:
 - You have a JIRA API key (which you can get from "Manage Account" -> "Security" -> "API token")
 - You hate manually transcribing data from one place to another and would rather trust a mindless computer program to do it for you!
 
+### Warning
+
+This importer does not check to see if you've already imported a timesheet, so it's up to you to ensure you don't import the same one twice!
+
 ## Usage
 
 Use the ```--live_mode``` flag when you are ready. Defaults to test mode which shows what would have been imported, and any issues that could not be found.
@@ -21,7 +25,15 @@ Use the ```--live_mode``` flag when you are ready. Defaults to test mode which s
 ### Example usage:
 
 ```bash
-python import_timesheet.py -s DailyExportSample.csv -j <jira_url> -u <jira_user> -t <jira_api_token>
+python import_timesheet.py  -j <jira_url> -u <jira_user> -t <jira_api_token> -s DailyExportSample.csv
+```
+
+Alternatively, you can use a config file to store your JIRA credentials.
+
+### Example usage with config file:
+
+```bash
+python import_timesheet.py  -c myconfig.yaml -s DailyExportSample.csv
 ```
 
 ## License
