@@ -33,8 +33,8 @@ def read_source_data_from_file(source_file: str) -> list:
         csv_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         data = [row for row in csv_reader]
 
-    # Remove the first 6 rows
-    data = data[6:]
+    # Skip the rows starting with #
+    data = [row for row in data if not row[0].startswith('#')]
 
     # show the jobs
     # for row in data[1:]:
@@ -120,7 +120,17 @@ def display_data(data: list) -> None:
 def convert_data_to_work_logs(data: list) -> list:
     work_logs = []
     for i in range(1, len(data[0])):
-        worklog_date = datetime.datetime.strptime(data[0][i], '%d/%m/%Y').strftime('%Y-%m-%dT%H:%M:%S.000+0000')
+        # source date could be in format DD/MM/YYYY or YYYY-MM-DD
+        worklog_date = data[0][i]
+        if '/' in worklog_date:  # DD/MM/YYYY format
+            # Convert to YYYY-MM-DDT00:00:00.000+0000 format
+            worklog_date = datetime.datetime.strptime(worklog_date, '%d/%m/%Y').strftime('%Y-%m-%dT%H:%M:%S.000+0000')
+        elif '-' in worklog_date:  # YYYY-MM-DD format
+            # Convert to YYYY-MM-DDT00:00:00.000+0000 format
+            worklog_date = datetime.datetime.strptime(worklog_date, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S.000+0000')
+        else:
+            logger.error(f"Invalid date format in column header: {data[0][i]}")
+            sys.exit(1)
         for j in range(1, len(data)):
             row = data[j]
             if int(row[i]) > 0:
